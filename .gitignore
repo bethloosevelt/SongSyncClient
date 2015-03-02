@@ -5,6 +5,14 @@
 .DS_Store
 /build
 
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+
+>>>>>>> e23933b683ef5177dead3a2486b41b4306ac0a42
 # Built application files
 *.apk
 *.ap_
