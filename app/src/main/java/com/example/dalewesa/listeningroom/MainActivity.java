@@ -1,5 +1,7 @@
 package com.example.dalewesa.listeningroom;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -7,8 +9,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.spotify.sdk.android.Spotify;
 import com.spotify.sdk.android.authentication.AuthenticationClient;
@@ -115,10 +119,20 @@ public class MainActivity extends Activity
 
             JSONArray tracks = parsed.getJSONObject("tracks").getJSONArray("items");
 
+            ArrayList<String> songTitles = new ArrayList<>();
             for (int i = 0; i < tracks.length(); i++) {
                 String name = tracks.getJSONObject(i).getString("name");
                 Log.d("MainActivity", name);
+                songTitles.add(name);
             }
+
+            ArrayAdapter<String> mResultsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songTitles);
+
+            ListView results = (ListView) findViewById(R.id.results_list);
+            results.setAdapter(mResultsAdapter);
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
