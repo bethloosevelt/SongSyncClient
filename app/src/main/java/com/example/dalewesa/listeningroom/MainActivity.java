@@ -3,6 +3,7 @@ package com.example.dalewesa.listeningroom;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.spotify.sdk.android.playback.ConnectionStateCallback;
 import com.spotify.sdk.android.playback.Player;
 import com.spotify.sdk.android.playback.PlayerNotificationCallback;
 import com.spotify.sdk.android.playback.PlayerState;
+
+import org.json.*;
 
 
 public class MainActivity extends Activity
@@ -37,6 +40,9 @@ public class MainActivity extends Activity
         final Button seekButton = (Button) findViewById(R.id.seek_button);
         final EditText seekTime = (EditText) findViewById(R.id.track_seek);
 
+        final Button searchButton = (Button) findViewById(R.id.search_button);
+        final EditText searchText = (EditText) findViewById(R.id.search_text);
+
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
 
@@ -44,6 +50,10 @@ public class MainActivity extends Activity
         AuthenticationRequest request = builder.build();
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+
+        /////////////////////////////////////
+        // MESSY PILE OF ONCLICK LISTENERS //
+        /////////////////////////////////////
 
         // Set up button that seeks to new part in track
         seekButton.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +67,61 @@ public class MainActivity extends Activity
                 seekTime.setText("");
             }
         });
+
+        // Set up button that searches for tracks
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                PopulateSearchTask task = new PopulateSearchTask();
+                task.execute(searchText.getText().toString());
+            }
+        });
+    }
+
+    class PopulateSearchTask extends AsyncTask<String, Void, String> {
+
+        /**
+         * Let's the user know we're downloading the contacts
+         * from the endpoint.
+         */
+        @Override
+        protected void onPreExecute() {
+            Log.d("MainActivity", "Fetching tracks...");
+        }
+
+        @Override
+        protected String doInBackground(String... trackNames) {
+            // We only need one url despite having varargs
+            String trackName = trackNames[0];
+
+            // Format API request url
+            String url = "https://api.spotify.com/v1/search?q=" + trackName + "&type=track";
+
+            try {
+                return NetworkUtils.getJson(url);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String json) {
+            populateSearchResults(json);
+        }
+    }
+
+    private void populateSearchResults(String json) {
+        try {
+            JSONObject parsed = new JSONObject(json);
+
+            JSONArray tracks = parsed.getJSONObject("tracks").getJSONArray("items");
+
+            for (int i = 0; i < tracks.length(); i++) {
+                String name = tracks.getJSONObject(i).getString("name");
+                Log.d("MainActivity", name);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
