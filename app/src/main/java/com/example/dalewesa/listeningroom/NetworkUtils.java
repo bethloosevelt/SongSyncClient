@@ -8,6 +8,8 @@ import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+
+//
 public class NetworkUtils {
     /**
      * Gets an input stream from a url
