@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/exploded-aar/com.spotify.sdk/spotifysdk/1.0.0-beta8/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="8797735652d1b8e4818be3dcc1c2f7f92d68795c">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/classes-b06a098832d38cebb05b3e8fa3d616c642da7023.jar" />
+    </item>
+    <item
+        jar="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/classes-eb48a593346079894ca811b52d3127367f603161.jar" />
+    </item>
+    <item
+        jar="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/classes-af36f66746b17e02a72dc53a42cba1a53e3a7093.jar" />
+    </item>
+    <item
+        jar="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-bfb82a941592c08cf693ddc6342be30ceda0c6fb.jar" />
+    </item>
+    <item
+        jar="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/libs/json-20090211.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c183aa3a2a6250293808bba12262c8920ce5a51c">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/json-20090211-8f6020ef2c51a56669ab8b323baafdbb9bb5c4ef.jar" />
+    </item>
+    <item
+        jar="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/exploded-aar/com.spotify.sdk/spotifysdk/1.0.0-beta8/libs/jnihelpers-1.0.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="c5d799bdcad99d28577d85564ddd5771702f5d1b">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/jnihelpers-1.0-defc7819604c40481ca633e49833cc6442aebb6c.jar" />
+    </item>
+    <item
+        jar="/Users/dalewesa/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/dalewesa/AndroidStudioProjects/ListeningRoom/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-f4fa9a6a04b517b755e2ab93edb072a04d6318bd.jar" />
+    </item>
+
+</items>
