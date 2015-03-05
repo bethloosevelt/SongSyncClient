@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,11 +28,15 @@ import com.spotify.sdk.android.playback.PlayerState;
 import org.json.*;
 
 
+
 public class MainActivity extends Activity
         implements PlayerNotificationCallback, ConnectionStateCallback {
 
     private static final String CLIENT_ID = "2e43900fe9e84ce6a7822c13d3ea3472";
     private static final String REDIRECT_URI = "song.sync://callback";
+    public static final String HOST = "http://10.0.0.8:5000";
+
+
 
     private Player mPlayer;
     private static final int REQUEST_CODE = 666;
@@ -41,12 +46,32 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button seekButton = (Button) findViewById(R.id.seek_button);
-        final EditText seekTime = (EditText) findViewById(R.id.track_seek);
+        final Button loginButton = (Button) findViewById(R.id.login_button);
+        final EditText roomQuery = (EditText) findViewById(R.id.room_search);
+        final Button roomQueryButton = (Button) findViewById(R.id.room_search_button);
 
-        final Button searchButton = (Button) findViewById(R.id.search_button);
-        final EditText searchText = (EditText) findViewById(R.id.search_text);
 
+        roomQuery.setVisibility(View.INVISIBLE);
+        roomQueryButton.setVisibility(View.INVISIBLE);
+        // Set up button that seeks to new part in track
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                login();
+            }
+        });
+
+        roomQueryButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                enterRoom task = new enterRoom();
+                task.execute( ((EditText)findViewById(R.id.room_search)).getText().toString() );
+
+                roomQuery.setVisibility(View.INVISIBLE);
+                roomQueryButton.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    public void login() {
         AuthenticationRequest.Builder builder = new AuthenticationRequest.Builder(CLIENT_ID,
                 AuthenticationResponse.Type.TOKEN, REDIRECT_URI);
 
@@ -55,50 +80,89 @@ public class MainActivity extends Activity
 
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
 
-        /////////////////////////////////////
-        // MESSY PILE OF ONCLICK LISTENERS //
-        /////////////////////////////////////
-
-        // Set up button that seeks to new part in track
-        seekButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                int time = Integer.parseInt(seekTime.getText().toString());
-                time = time * 1000; // secs to millisex (haha)
-
-                mPlayer.seekToPosition(time);
-
-                // Clear text
-                seekTime.setText("");
-            }
-        });
-
-        // Set up button that searches for tracks
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                PopulateSearchTask task = new PopulateSearchTask();
-                task.execute(searchText.getText().toString());
-            }
-        });
     }
 
-    class PopulateSearchTask extends AsyncTask<String, Void, String> {
+    public void loggedInSuccessfully() {
+        // this function fires upon redirect from spotify back to our app
+        // will make login button dissappear and make visible all other views
 
-        /**
-         * Let's the user know we're downloading the contacts
-         * from the endpoint.
-         */
-        @Override
-        protected void onPreExecute() {
-            Log.d("MainActivity", "Fetching tracks...");
-        }
+        final Button loginButton = (Button) findViewById(R.id.login_button);
+        final EditText roomQuery = (EditText) findViewById(R.id.room_search);
+        final Button roomQueryButton = (Button) findViewById(R.id.room_search_button);
+
+        loginButton.setVisibility(View.GONE);
+        roomQuery.setVisibility(View.VISIBLE);
+        roomQueryButton.setVisibility(View.VISIBLE);
+
+    }
+
+//    class PopulateSearchTask extends AsyncTask<String, Void, String> {
+//
+//        /**
+//         * Let's the user know we're downloading the contacts
+//         * from the endpoint.
+//         */
+//        @Override
+//        protected void onPreExecute() {
+//            Log.d("MainActivity", "Fetching tracks...");
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... trackNames) {
+//            // We only need one url despite having varargs
+//            String trackName = trackNames[0];
+//
+//            // Format API request url
+//            String url = "https://api.spotify.com/v1/search?q=" + trackName + "&type=track";
+//
+//            try {
+//                return NetworkUtils.getJson(url);
+//            } catch (Exception e) {
+//                return null;
+//            }
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String json) {
+//            populateSearchResults(json);
+//        }
+//    }
+
+//    private void populateSearchResults(String json) {
+//        try {
+//            JSONObject parsed = new JSONObject(json);
+//
+//            JSONArray tracks = parsed.getJSONObject("tracks").getJSONArray("items");
+//
+//            ArrayList<String> songTitles = new ArrayList<>();
+//            for (int i = 0; i < tracks.length(); i++) {
+//                String name = tracks.getJSONObject(i).getString("name");
+//                Log.d("MainActivity", name);
+//                songTitles.add(name);
+//            }
+//
+//            ArrayAdapter<String> mResultsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songTitles);
+//
+//            ListView results = (ListView) findViewById(R.id.results_list);
+//            results.setAdapter(mResultsAdapter);
+//
+//
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+
+class enterRoom extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... trackNames) {
             // We only need one url despite having varargs
-            String trackName = trackNames[0];
+            String roomID = trackNames[0];
 
             // Format API request url
-            String url = "https://api.spotify.com/v1/search?q=" + trackName + "&type=track";
+            String url = HOST + "/room/" + roomID;
 
             try {
                 return NetworkUtils.getJson(url);
@@ -109,26 +173,25 @@ public class MainActivity extends Activity
 
         @Override
         protected void onPostExecute(String json) {
-            populateSearchResults(json);
+            populateRoomResults(json);
         }
     }
 
-    private void populateSearchResults(String json) {
+    private void populateRoomResults(String json) {
         try {
             JSONObject parsed = new JSONObject(json);
 
-            JSONArray tracks = parsed.getJSONObject("tracks").getJSONArray("items");
+            JSONArray tracks = parsed.getJSONArray("future_song_queue");
 
             ArrayList<String> songTitles = new ArrayList<>();
             for (int i = 0; i < tracks.length(); i++) {
-                String name = tracks.getJSONObject(i).getString("name");
-                Log.d("MainActivity", name);
+                String name = tracks.getString(i);
                 songTitles.add(name);
             }
 
             ArrayAdapter<String> mResultsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, songTitles);
 
-            ListView results = (ListView) findViewById(R.id.results_list);
+            ListView results = (ListView) findViewById(R.id.room_list);
             results.setAdapter(mResultsAdapter);
 
 
@@ -186,7 +249,8 @@ public class MainActivity extends Activity
                     public void onInitialized(Player player) {
                         mPlayer.addConnectionStateCallback(MainActivity.this);
                         mPlayer.addPlayerNotificationCallback(MainActivity.this);
-                        mPlayer.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V");
+                        //mPlayer.play("spotify:track:2TpxZ7JUBn3uw46aR7qd6V");
+                        loggedInSuccessfully();
                     }
 
                     @Override

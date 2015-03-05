@@ -7,32 +7,27 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/track_seek"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/seek_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/track_seek_button"/>
-
-    <EditText
-        android:id="@+id/search_text"
+        android:id="@+id/room_search"
         android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/search_button"
+        android:id="@+id/room_search_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/search_button"/>
+        android:text="@string/room_search_button"/>
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_button"/>
+
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/results_list"/>
+        android:id="@+id/room_list"/>
 
 </LinearLayout>
